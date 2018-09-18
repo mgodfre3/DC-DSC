@@ -1,11 +1,12 @@
 Configuration BaseOS{
 
 
-Import-DscResource -ModuleName 'xDSCDomainjoin'
+Import-DscResource -Name 'xDSCDomainjoin'
 Import-DscResource -Name 'xRemoteDesktopAdmin'
-Import-DSCResource -Name 'xTimeZone'
-Import-DscResource –ModuleName xSystemSecurity
- 
+Import-DscResource -Name 'xTimeZone'
+Import-DscResource -ModuleName "xNetworking"
+             
+
  #Variables 
  $domainname='mycloudacademy.org'
  $djoin=(Get-AutomationPSCredential -Name 'Djoiner')
@@ -25,42 +26,23 @@ Import-DscResource –ModuleName xSystemSecurity
             Domain = $DomainName
             Credential = $djoin # Credential to join to domain
                                                      } 
-                                                          
-            xIEESC SetAdminIEESC {
-            UserRole = "Administrators"
-            IsEnabled = $True           
-                                                     }   
-                                           
+
             xUAC UAC{
             Setting = 'AlwaysNotify'        
                                                      } 
-
-
+            PSExecutionPolicy PSExecutionPolicy {        
+            PSExecutionPolicy ='RemoteSigned'
+            }
+           <#                                         
+            xFirewall AllowRDP{
+            Name = 'DSC - Remote Desktop Admin Connections'
+            DisplayGroup = "Remote Desktop"
+            Ensure = 'Present'
+            State = 'Enabled'
+            Access = 'Allow'
+            Profile = 'Domain'
+                                                     }
+#>
 } #end Node Configuration
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 } #End Configuration      

@@ -13,6 +13,7 @@ Configuration DC{
     Import-DscResource -ModuleName 'xRemoteDesktopAdmin' 
     Import-DSCResource -ModuleName 'xTimeZone'
     Import-DSCResource -ModuleName 'xDSCDomainjoin'
+    Import-DSCResource -ModuleName 'xNetworking'
     
 
     Node DC{
@@ -28,14 +29,14 @@ Configuration DC{
                                                   }
                                         } #End ForEach 
 
-         xRemoteDesktopAdmin RemoteDesktopSettings{
-         Ensure = 'Present'
-         UserAuthentication = 'Secure'
+        xRemoteDesktopAdmin RemoteDesktopSettings{
+        Ensure = 'Present'
+        UserAuthentication = 'Secure'
                                                   }
                                     
-         xTimeZone ServerTime{
-         TimeZone = "Eastern Standard Time"
-         IsSingleInstance = 'Yes'
+        xTimeZone ServerTime{
+        TimeZone = "Eastern Standard Time"
+        IsSingleInstance = 'Yes'
                                                   }  
         
         xDSCDomainjoin JoinDomain{
@@ -50,7 +51,15 @@ Configuration DC{
                                         
         xUAC UAC{
         Setting = 'AlwaysNotify'        
-                                                  }                                            
+                                                  } 
+        xFirewall AllowRDP{
+        Name = 'DSC - Remote Desktop Admin Connections'
+        DisplayGroup = "Remote Desktop"
+        Ensure = 'Present'
+        State = 'Enabled'
+        Access = 'Allow'
+        Profile = 'Domain'
+                                                  }                                           
         
         xWaitForADDomain DscForestWait{
         DomainName = $DomainName
