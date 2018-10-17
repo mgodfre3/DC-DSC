@@ -1,9 +1,9 @@
 Configuration BaseOS{
 
 
-Import-DscResource -Name 'xDSCDomainjoin'
-Import-DscResource -Name 'xRemoteDesktopAdmin'
-Import-DscResource -Name 'xTimeZone'
+Import-DscResource -ModuleName 'xDSCDomainjoin'
+Import-DscResource -ModuleName 'xRemoteDesktopAdmin'
+Import-DscResource -ModuleName 'xTimeZone'
 Import-DscResource -ModuleName "xNetworking"
              
 
